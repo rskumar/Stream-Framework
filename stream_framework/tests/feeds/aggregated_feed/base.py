@@ -1,5 +1,6 @@
 from stream_framework.activity import Activity, AggregatedActivity
 from stream_framework.feeds.aggregated_feed.base import AggregatedFeed
+from stream_framework.feeds.notification_feed.base import BaseNotificationFeed
 from stream_framework.verbs.base import Add as AddVerb, Love as LoveVerb
 import copy
 import datetime
@@ -9,7 +10,7 @@ import time
 
 def implementation(meth):
     def wrapped_test(self, *args, **kwargs):
-        if self.feed_cls == AggregatedFeed:
+        if self.feed_cls in (AggregatedFeed, BaseNotificationFeed):
             raise unittest.SkipTest('only test this on actual implementations')
         return meth(self, *args, **kwargs)
     return wrapped_test
@@ -27,6 +28,8 @@ class TestAggregatedFeed(unittest.TestCase):
             1, LoveVerb, 1, 1, datetime.datetime.now(), {})
         activities = []
         base_time = datetime.datetime.now() - datetime.timedelta(days=10)
+        # make sure that the first portion of activities are created within the same day
+        base_time = base_time.replace(hour=0)
         for x in range(1, 10):
             activity_time = base_time + datetime.timedelta(
                 hours=x)
@@ -43,12 +46,10 @@ class TestAggregatedFeed(unittest.TestCase):
         aggregator = self.test_feed.get_aggregator()
         self.aggregated_activities = aggregator.aggregate(activities)
         self.aggregated = self.aggregated_activities[0]
-        if self.__class__ != TestAggregatedFeed:
-            self.test_feed.delete()
 
-    # def tearDown(self):
-    #     if self.feed_cls != AggregatedFeed:
-    #         self.test_feed.delete()
+    def tearDown(self):
+        if self.feed_cls not in (AggregatedFeed, BaseNotificationFeed):
+            self.test_feed.delete()
 
     @implementation
     def test_add_aggregated_activity(self):

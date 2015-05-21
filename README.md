@@ -1,13 +1,9 @@
-Stream Framework (previously Feedly)
-------------------------------------
+Stream Framework
+----------------
 
 [![Build Status](https://travis-ci.org/tschellenbach/Stream-Framework.png?branch=master)](https://travis-ci.org/tschellenbach/Stream-Framework)
 [![PyPI version](https://badge.fury.io/py/stream-framework.svg)](http://badge.fury.io/py/stream-framework)
 
-**Note**
-
-This project was previously named Feedly. As requested by feedly.com we have now renamed the project to Stream Framework.
-You can find more details about the name change on the [blog].
 
 ## Activity Streams & Newsfeeds ##
 
@@ -16,7 +12,8 @@ You can find more details about the name change on the [blog].
   <img src="https://dvqg2dogggmn6.cloudfront.net/images/mood-home.png" alt="Examples of what you can build" title="What you can build"/>
 </p>
 
-Stream Framework allows you to build activity streams & newsfeeds using Cassandra and/or Redis.
+Stream Framework is a python library which allows you to build activity streams & newsfeeds using Cassandra and/or Redis. If you're not using python have a look at [Stream] (https://getstream.io/), which supports Node, Ruby, PHP, Python, Go, Scala,  Java and REST.
+
 Examples of what you can build are:
 
 * Activity streams such as seen on Github
@@ -27,8 +24,7 @@ Examples of what you can build are:
 
 (Feeds are also commonly called: Activity Streams, activity feeds, news streams.)
 
-### Example application ###
-We've included a [Pinterest like example application] [example_app_link] based on Stream Framework. 
+
 
 [fashiolista]: http://www.fashiolista.com/
 [stream]: http://getstream.io/
@@ -44,24 +40,21 @@ We've included a [Pinterest like example application] [example_app_link] based o
 
 
 
-## GetStream.io ##
+## Stream ##
 
-Stream Framework's authors also offer a Saas solution for building feed systems at [getstream.io] [stream]
-The hosted service is highly optimized and allows you start building your application immediatly.
-It saves you the hassle of maintaining Cassandra, Redis, Faye, RabbitMQ and Celery workers.
-Clients are available for [Node] [stream_js], [Ruby] [stream_ruby], [Python] [stream_python] and [PHP] [stream_php]
+<a href="https://getstream.io/"><img src="http://dvqg2dogggmn6.cloudfront.net/images/getstream-dot-io-logo-light.png" alt="Build scalable newsfeeds and activity streams using getstream.io" title="Build scalable newsfeeds and activity streams using getstream.io" width="300px"/></a>
 
-## Consultancy ##
+Stream Framework's authors also offer a web service for building scalable newsfeeds & activity streams at [getstream.io] [stream]
+It allows you to create your feeds by talking to a beautiful and easy to use REST API. There are clients available for Node, Ruby, PHP, Python, Go, Scala and Java. The [get started](https://getstream.io/get_started/#intro) explains the API & concept in a few clicks. Its a lot easier to use, free up to 3 million feed updates and saves you the hassle of maintaining Cassandra, Redis, Faye, RabbitMQ and Celery workers.
 
-For Stream Framework and GetStream.io consultancy please contact thierry at getstream.io
+## Stream Framework ##
 
-
-**Authors**
+**Authors & Contributors**
 
  * Thierry Schellenbach (thierry at getstream.io)
  * Tommaso Barbugli (tommaso at getstream.io)
+ * Anislav Atanasov
  * Guyon Morée
-
 
 **Resources**
 
@@ -70,6 +63,9 @@ For Stream Framework and GetStream.io consultancy please contact thierry at gets
  * [Code] 
  * [Travis CI] 
  
+** Example application **
+
+We've included a [Pinterest like example application] [example_app_link] based on Stream Framework. 
 
 **Tutorials**
 
@@ -257,5 +253,6 @@ Redis based, database fallback, very similar to Fashiolista's old approach.
 
 [instagram]: http://planetcassandra.org/blog/post/instagram-making-the-switch-to-cassandra-from-redis-75-instasavings
 
-
+[Relevancy at Etsy][etsy_relevancy]
+[etsy_relevancy]: http://mimno.infosci.cornell.edu/info6150/readings/p1640-hu.pdf
 

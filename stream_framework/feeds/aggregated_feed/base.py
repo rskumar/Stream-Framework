@@ -20,7 +20,7 @@ class AggregatedFeed(BaseFeed):
 
     '''
     Aggregated feeds are an extension of the basic feed.
-    The turn activities into aggregated activities by using an aggregator class.
+    They turn activities into aggregated activities by using an aggregator class.
 
     See :class:`.BaseAggregator`
 
@@ -240,7 +240,7 @@ class AggregatedFeed(BaseFeed):
         # return the merge of these two
         new_aggregated = new[:]
         if changed:
-            new_aggregated += zip(*changed)[1]
+            new_aggregated += list(zip(*changed))[1]
 
         self.on_update_feed(to_add, to_remove)
         return new_aggregated
@@ -273,7 +273,6 @@ class AggregatedFeed(BaseFeed):
         to_remove = deleted[:]
         to_add = new[:]
         if changed:
-            # sorry about the very python specific hack :)
-            to_remove += zip(*changed)[0]
-            to_add += zip(*changed)[1]
+            to_remove += [c[0] for c in changed]
+            to_add += [c[1] for c in changed]
         return to_remove, to_add

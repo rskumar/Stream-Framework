@@ -1,13 +1,38 @@
-import collections
-from datetime import datetime
 from stream_framework.exceptions import DuplicateActivityException
+import collections
+from datetime import datetime, timedelta
 import functools
 import itertools
 import logging
-import time
+import six
 
 
 logger = logging.getLogger(__name__)
+
+MISSING = object()
+
+
+class LRUCache:
+
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = collections.OrderedDict()
+
+    def get(self, key):
+        try:
+            value = self.cache.pop(key)
+            self.cache[key] = value
+            return value
+        except KeyError:
+            return MISSING
+
+    def set(self, key, value):
+        try:
+            self.cache.pop(key)
+        except KeyError:
+            if len(self.cache) >= self.capacity:
+                self.cache.popitem(last=False)
+        self.cache[key] = value
 
 
 def chunks(iterable, n=10000):
@@ -19,7 +44,7 @@ def chunks(iterable, n=10000):
         yield chunk
 
 
-epoch = datetime.utcfromtimestamp(0)
+epoch = datetime(1970, 1, 1)
 
 
 def datetime_to_epoch(dt):
@@ -32,7 +57,7 @@ def datetime_to_epoch(dt):
 
 
 def epoch_to_datetime(time_):
-    return datetime.utcfromtimestamp(time_)
+    return epoch + timedelta(seconds=time_)
 
 
 def make_list_unique(sequence, marker_function=None):
@@ -65,10 +90,10 @@ def warn_on_error(f, exceptions):
     def wrapper(*args, **kwargs):
         try:
             return f(*args, **kwargs)
-        except exceptions, e:
-            logger.warn(unicode(e), exc_info=sys.exc_info(), extra={
+        except exceptions as e:
+            logger.warn(six.text_type(e), exc_info=sys.exc_info(), extra={
                 'data': {
-                    'body': unicode(e),
+                    'body': six.text_type(e),
                 }
             })
     return wrapper
@@ -88,18 +113,18 @@ class memoized(object):
 
     def __init__(self, func):
         self.func = func
-        self.cache = {}
+        self.cache = LRUCache(10000)
 
     def __call__(self, *args):
         if not isinstance(args, collections.Hashable):
             # uncacheable. a list, for instance.
             # better to not cache than blow up.
             return self.func(*args)
-        if args in self.cache:
-            return self.cache[args]
+        if self.cache.get(args) is not MISSING:
+            return self.cache.get(args)
         else:
             value = self.func(*args)
-            self.cache[args] = value
+            self.cache.set(args, value)
             return value
 
     def __repr__(self):
@@ -109,6 +134,7 @@ class memoized(object):
     def __get__(self, obj, objtype):
         '''Support instance methods.'''
         return functools.partial(self.__call__, obj)
+
 
 
 def get_metrics_instance():
