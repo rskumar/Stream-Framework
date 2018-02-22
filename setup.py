@@ -17,13 +17,15 @@ tests_require = [
 ]
 
 install_requires = [
-    'redis>=2.8.0',
-    'celery',
-    'cqlengine==0.21',
-    'cassandra-driver>=2.1.0,<2.2.0',
+    'celery>=3.0.0',
     'six'
 ]
 
+extras_require = {
+    'test': tests_require,
+    'redis': ['redis>=2.8.0'],
+    'cassandra': ['cassandra-driver>=2.7.2'],
+}
 
 class PyTest(TestCommand):
 
@@ -49,7 +51,7 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=install_requires,
-    extras_require={'test': tests_require},
+    extras_require=extras_require,
     cmdclass={'test': PyTest},
     tests_require=tests_require,
     include_package_data=True,
